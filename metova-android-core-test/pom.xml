@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns='http://maven.apache.org/POM/4.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd'>
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+        <artifactId>metova-android</artifactId>
+        <groupId>com.metova</groupId>
+        <version>2.0.0</version>
+    </parent>
+	<groupId>com.metova</groupId>
+	<artifactId>metova-android-core-test</artifactId>
+	<packaging>apk</packaging>
+	<version>1.0.0-SNAPSHOT</version>
+	<name>Metova Android Archetype Test</name>
+	<properties>
+		<!-- Your target SDK version -->
+		<android.application.targetSdkVersion>16</android.application.targetSdkVersion>
+		
+		<!-- Application artifact details -->
+		<application.groupId>com.metova</application.groupId>
+		<application.artifactId>metova-android-core</application.artifactId>
+		<application.version>[0.0.0.1,)</application.version>
+	</properties>
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+	</build>
+	<dependencies>
+		<dependency>
+			<groupId>com.google.android</groupId>
+			<artifactId>android</artifactId>
+			<version>4.1.1.4</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.android</groupId>
+			<artifactId>android-test</artifactId>
+			<version>4.1.1.4</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>${application.groupId}</groupId>
+			<artifactId>${application.artifactId}</artifactId>
+			<version>${application.version}</version>
+			<type>apklib</type>
+		</dependency>
+		<dependency>
+			<groupId>${application.groupId}</groupId>
+			<artifactId>${application.artifactId}</artifactId>
+			<version>${application.version}</version>
+			<scope>provided</scope>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>com.google.dexmaker</groupId>
+			<artifactId>dexmaker-mockito</artifactId>
+			<version>0.9</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.mockito</groupId>
+					<artifactId>mockito-core</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.google.dexmaker</groupId>
+			<artifactId>dexmaker</artifactId>
+			<version>0.9</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.mockito</groupId>
+					<artifactId>mockito-core</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>1.9.5.metova</version>
+		</dependency>		
+	</dependencies>
+</project>

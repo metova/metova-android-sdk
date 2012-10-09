@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry exported="true" kind="var" path="M2_REPO/org/mockito/mockito-core/1.9.5.metova/mockito-core-1.9.5.metova.jar"/>
+	<classpathentry exported="true" kind="var" path="M2_REPO/com/google/dexmaker/dexmaker/0.9/dexmaker-0.9.jar"/>
+	<classpathentry exported="true" kind="var" path="M2_REPO/com/google/dexmaker/dexmaker-mockito/0.9/dexmaker-mockito-0.9.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/metova-android-core"/>
+	<classpathentry exported="true" kind="var" path="M2_REPO/org/objenesis/objenesis/1.0/objenesis-1.0.jar"/>
+	<classpathentry exported="true" kind="var" path="M2_REPO/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1.jar"/>
+	<classpathentry kind="output" path="bin/classes"/>
+</classpath>
