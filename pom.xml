@@ -20,7 +20,7 @@
 		<android.support.version>r7</android.support.version>
 
 		<!-- Metova-specific deployment properties. -->
-		<metova.maven.app7.version>1.0.5</metova.maven.app7.version>
+		<metova.maven.app7.version>1.0.4.2</metova.maven.app7.version>
 	</properties>
 	<modules>
 		<module>metova-android-core</module>
@@ -46,9 +46,6 @@
 						<!-- BuildConfig and R oftentimes contain duplicate code. -->
 						<exclude>**/BuildConfig.java</exclude>
 						<exclude>**/R.java</exclude>
-						
-						<!-- Tests may have duplicate code. -->
-						<exclude>**/*Test.java</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
@@ -106,7 +103,7 @@
 	</build>
 	<profiles>
 		<profile>
-			<id>sign-apk</id>
+			<id>sign-zipalign-apk</id>
 			<build>
                 <plugins>
                     <plugin>
@@ -138,6 +135,30 @@
                             </execution>
                         </executions>
                     </plugin>
+		            <plugin>
+		                <groupId>org.codehaus.mojo</groupId>
+		                <artifactId>exec-maven-plugin</artifactId>
+		                <version>1.1.1</version>
+		                <executions>
+		                    <execution>
+		                        <id>zipalign</id>
+		                        <goals>
+		                            <goal>exec</goal>
+		                        </goals>
+		                        <phase>install</phase>
+		                        <configuration>
+		                            <executable>${ANDROID_HOME}/tools/zipalign</executable>
+		                             <arguments>
+		                                <argument>-f</argument>
+		                                <argument>4</argument>
+		                                <argument>target/${project.build.finalName}.apk</argument>
+		                                <argument>target/${project.build.finalName}-zipped.apk</argument>
+		                            </arguments>
+		                        </configuration>
+		                    </execution>
+		                </executions>
+		            </plugin>
+                    
                     <plugin>
                         <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                         <artifactId>android-maven-plugin</artifactId>
