@@ -20,7 +20,7 @@
 		<android.support.version>r7</android.support.version>
 
 		<!-- Metova-specific deployment properties. -->
-		<metova.maven.app7.version>1.0.4.2</metova.maven.app7.version>
+		<metova.maven.app7.version>1.0.5</metova.maven.app7.version>
 	</properties>
 	<modules>
 		<module>metova-android-core</module>
@@ -46,6 +46,9 @@
 						<!-- BuildConfig and R oftentimes contain duplicate code. -->
 						<exclude>**/BuildConfig.java</exclude>
 						<exclude>**/R.java</exclude>
+						
+						<!-- Tests may have duplicate code. -->
+						<exclude>**/*Test.java</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
@@ -103,7 +106,8 @@
 	</build>
 	<profiles>
 		<profile>
-			<id>sign-zipalign-apk</id>
+			<!-- Sign and zip-align the APK. -->
+			<id>prepare-apk</id>
 			<build>
 				<plugins>
 					<plugin>
