@@ -1,4 +1,4 @@
-package com.metova.android.util.http;
+package com.metova.android.util.http.async;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.inOrder;
@@ -24,13 +24,13 @@ public class QueuedHttpClientTest extends TestCase {
     private QueuedHttpClient queuedHttpClient;
     private HttpClient mockHttpClient;
     private ExecutorService executorService;
-    private BlockingQueue<HttpUriRequest> blockingQueue;
+    private BlockingQueue<AsyncHttpUriRequest> blockingQueue;
 
     @Override
     public void setUp() {
 
         mockHttpClient = mock( HttpClient.class );
-        blockingQueue = new LinkedBlockingQueue<HttpUriRequest>();
+        blockingQueue = new LinkedBlockingQueue<AsyncHttpUriRequest>();
         //single thread needed to ensure serial dispatch order
         executorService = Executors.newSingleThreadExecutor();
     }
@@ -42,7 +42,7 @@ public class QueuedHttpClientTest extends TestCase {
             queuedHttpClient = new QueuedHttpClient( null, executorService, blockingQueue );
             fail( "Expected a NullPointerException." );
         }
-        catch (NullPointerException npe) {
+        catch (AssertionError ae) {
             //success
         }
     }
@@ -54,7 +54,7 @@ public class QueuedHttpClientTest extends TestCase {
             queuedHttpClient = new QueuedHttpClient( mockHttpClient, null, blockingQueue );
             fail( "Expected a NullPointerException." );
         }
-        catch (NullPointerException npe) {
+        catch (AssertionError ae) {
             //success
         }
     }
@@ -66,7 +66,7 @@ public class QueuedHttpClientTest extends TestCase {
             queuedHttpClient = new QueuedHttpClient( mockHttpClient, executorService, null );
             fail( "Expected a NullPointerException." );
         }
-        catch (NullPointerException npe) {
+        catch (AssertionError ae) {
             //success
         }
     }
@@ -109,9 +109,9 @@ public class QueuedHttpClientTest extends TestCase {
 
         InOrder inOrder = inOrder( mockHttpClient );
 
-        inOrder.verify( mockHttpClient.execute( eq( request1 ) ) );
-        inOrder.verify( mockHttpClient.execute( eq( request2 ) ) );
-        inOrder.verify( mockHttpClient.execute( eq( request3 ) ) );
+        inOrder.verify( mockHttpClient ).execute( eq( request1 ) );
+        inOrder.verify( mockHttpClient ).execute( eq( request2 ) );
+        inOrder.verify( mockHttpClient ).execute( eq( request3 ) );
 
     }
 }

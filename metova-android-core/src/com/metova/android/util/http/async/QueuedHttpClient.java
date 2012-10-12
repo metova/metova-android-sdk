@@ -1,4 +1,4 @@
-package com.metova.android.util.http;
+package com.metova.android.util.http.async;
 
 import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
@@ -13,7 +13,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.util.Log;
 
+import com.metova.android.util.Assertions;
 import com.metova.android.util.concurrent.ThreadPool;
+import com.metova.android.util.http.HttpClients;
 import com.metova.android.util.http.response.Response;
 
 /**
@@ -27,7 +29,7 @@ public class QueuedHttpClient {
 
     private static final String TAG = QueuedHttpClient.class.getSimpleName();
 
-    private final BlockingQueue<HttpUriRequest> queue;
+    private final BlockingQueue<AsyncHttpUriRequest> queue;
     private final ExecutorService executor;
     private final HttpClient httpClient;
 
@@ -37,33 +39,24 @@ public class QueuedHttpClient {
 
     public QueuedHttpClient() {
 
-        this( new LinkedBlockingQueue<HttpUriRequest>() );
+        this( new LinkedBlockingQueue<AsyncHttpUriRequest>() );
     }
 
-    public QueuedHttpClient(BlockingQueue<HttpUriRequest> queue) {
+    public QueuedHttpClient(BlockingQueue<AsyncHttpUriRequest> queue) {
 
         this( new ThreadPool( 1 ), queue );
     }
 
-    public QueuedHttpClient(ThreadPoolExecutor executor, BlockingQueue<HttpUriRequest> queue) {
+    public QueuedHttpClient(ThreadPoolExecutor executor, BlockingQueue<AsyncHttpUriRequest> queue) {
 
         this( new DefaultHttpClient(), executor, queue );
     }
 
-    public QueuedHttpClient(final HttpClient httpClient, final ExecutorService executor, final BlockingQueue<HttpUriRequest> queue) {
+    public QueuedHttpClient(final HttpClient httpClient, final ExecutorService executor, final BlockingQueue<AsyncHttpUriRequest> queue) {
 
-        if ( queue == null ) {
-
-            throw new NullPointerException( "'queue' argument may not be null." );
-        }
-        if ( executor == null ) {
-
-            throw new NullPointerException( "'executor' argument may not be null." );
-        }
-        if ( httpClient == null ) {
-
-            throw new NullPointerException( "'httpClient' argument may not be null." );
-        }
+        Assertions.notNull( "queue", queue );
+        Assertions.notNull( "executor", executor );
+        Assertions.notNull( "httpClient", httpClient );
 
         this.queue = queue;
         this.executor = executor;
@@ -77,19 +70,44 @@ public class QueuedHttpClient {
         this.dispatchRunnable = new DispatchRunnable();
     }
 
+    /**
+     * Convenience method for {@link #submit(HttpUriRequest, AsyncHttpResponseCallback)} that 
+     * passes {@code null} for the callback;
+     * 
+     * @param request
+     */
     public void submit( HttpUriRequest request ) {
 
-        /*
-         * We should consider having a callback that clients can submit to be notified
-         * when the request gets a response (and provide the response)
-         */
+        submit( request, null );
+    }
+
+    /**
+     * Submits the {@link HttpUriRequest} for asynchronous dispatch. Optionally
+     * allows specifying an {@link AsyncHttpResponseCallback}.
+     * 
+     * @param request the outgoing request to dispatch
+     * @param callback the callback to receive notifications when a response is received. May be null.
+     */
+    public void submit( HttpUriRequest request, AsyncHttpResponseCallback callback ) {
+
+        submit( new AsyncHttpUriRequest( request, callback ) );
+    }
+
+    public void submit( AsyncHttpUriRequest asyncHttpUriRequest ) {
+
         if ( Log.isLoggable( TAG, Log.DEBUG ) ) {
-            Log.d( TAG, "Request submitted: " + request.getRequestLine() );
+
+            final HttpUriRequest request = asyncHttpUriRequest.getRequest();
+            final AsyncHttpResponseCallback callback = asyncHttpUriRequest.getCallback();
+
+            StringBuilder stringBuilder = new StringBuilder( "Request submitted: " );
+            stringBuilder.append( request.getRequestLine() ).append( " to " ).append( request.getURI() );
+            stringBuilder.append( ( callback == null ) ? " without callback" : " with callback" );
+            Log.d( TAG, "Request submitted: " + request.getRequestLine() + " to " + request.getURI() );
         }
-        if ( Log.isLoggable( TAG, Log.VERBOSE ) ) {
-            Log.v( TAG, "Full request: " + request );
-        }
-        queue.add( request );
+
+        //TODO save the callback
+        queue.add( asyncHttpUriRequest );
     }
 
     public void start() {
@@ -114,7 +132,7 @@ public class QueuedHttpClient {
         }
     }
 
-    protected void dispatch( HttpUriRequest request ) {
+    protected void dispatch( final HttpUriRequest request, final AsyncHttpResponseCallback callback ) {
 
         if ( Log.isLoggable( TAG, Log.DEBUG ) ) {
             Log.d( TAG, "Attempting to dispatch request: " + request.getRequestLine() );
@@ -124,13 +142,24 @@ public class QueuedHttpClient {
         }
 
         final Response response = HttpClients.execute( httpClient, request );
-        //TODO ASDK-116 need to do something with this response. clients provide callback?
 
         if ( Log.isLoggable( TAG, Log.DEBUG ) ) {
             Log.d( TAG, "Completed http call with code: " + response.getStatusCode() );
+            if ( callback != null ) {
+                Log.d( TAG, "Invoking callback." );
+            }
         }
-        if ( Log.isLoggable( TAG, Log.VERBOSE ) ) {
-            Log.v( TAG, "Full response: " + response.getHttpResponse() );
+
+        if ( callback != null ) {
+
+            executor.submit( new Runnable() {
+
+                @Override
+                public void run() {
+
+                    callback.onResponseReceived( response );
+                }
+            } );
         }
     }
 
@@ -139,11 +168,16 @@ public class QueuedHttpClient {
         public void run() {
 
             while (performDispatches) {
+
                 try {
-                    HttpUriRequest request = queue.take();
+
+                    AsyncHttpUriRequest asyncHttpUriRequest = queue.take();
+                    HttpUriRequest request = asyncHttpUriRequest.getRequest();
+                    AsyncHttpResponseCallback callback = asyncHttpUriRequest.getCallback();
+
                     //prevent interruption while dispatching
                     synchronized (queue) {
-                        dispatch( request );
+                        dispatch( request, callback );
                     }
                 }
                 catch (InterruptedException e) {
