@@ -22,6 +22,10 @@
 		<!-- Metova-specific deployment properties. -->
 		<metova.maven.app7.version>1.0.5</metova.maven.app7.version>
 	</properties>
+	<scm>
+                <connection>scm:git:git@github.com:metova/metova-android-sdk.git</connection>
+                <developerConnection>scm:git:git@github.com:metova/metova-android-sdk.git</developerConnection>
+        </scm>
 	<modules>
 		<module>metova-android-core</module>
 		<!--<module>metova-android-core-test</module>-->
