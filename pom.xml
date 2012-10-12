@@ -24,7 +24,7 @@
 	</properties>
 	<modules>
 		<module>metova-android-core</module>
-		<module>metova-android-core-test</module>
+		<!--<module>metova-android-core-test</module>-->
 	</modules>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
@@ -206,12 +206,12 @@
 				<version>2.0.1-SNAPSHOT</version>
 				<type>apklib</type>
 			</dependency>
-			<dependency>
+			<!--<dependency>
 				<groupId>com.metova</groupId>
 				<artifactId>metova-android-core-test</artifactId>
 				<version>2.0.1-SNAPSHOT</version>
 				<type>apk</type>
-			</dependency>
+			</dependency>-->
 		</dependencies>
 	</dependencyManagement>
 	<dependencies>
@@ -227,4 +227,16 @@
 			<version>${android.support.version}</version>
 		</dependency>
 	</dependencies>
+	<distributionManagement>
+                <repository>
+                        <id>metova</id>
+                        <name>Metova Repo</name>
+                        <url>http://repo.metova.com/nexus/content/repositories/metova/</url>
+                </repository>
+                <snapshotRepository>
+                        <id>metova-snapshots</id>
+                        <name>Metova Repo</name>
+                        <url>http://repo.metova.com/nexus/content/repositories/metova-snapshots/</url>
+                </snapshotRepository>
+        </distributionManagement>
 </project>
