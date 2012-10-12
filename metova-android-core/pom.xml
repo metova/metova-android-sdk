@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.metova</groupId>
 		<artifactId>metova-android</artifactId>
-		<version>2.0.0</version>
+		<version>2.0.0-SNAPSHOT</version>
 	</parent>
 	<groupId>com.metova</groupId>
 	<artifactId>metova-android-core</artifactId>
@@ -25,7 +25,7 @@
 	</dependencies>
 	<build>
 		<plugins>
-	        <!-- see http://code.google.com/p/maven-android-plugin/issues/detail?id=139#c6 -->
+	        	<!-- Deploy the JAR as well as the APKLIB. See http://code.google.com/p/maven-android-plugin/issues/detail?id=139#c6 -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>

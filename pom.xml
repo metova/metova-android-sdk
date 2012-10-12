@@ -24,6 +24,7 @@
 	</properties>
 	<modules>
 		<module>metova-android-core</module>
+		<module>metova-android-core-test</module>
 	</modules>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
@@ -204,6 +205,12 @@
 				<artifactId>metova-android-core</artifactId>
 				<version>2.0.0-SNAPSHOT</version>
 				<type>apklib</type>
+			</dependency>
+			<dependency>
+				<groupId>com.metova</groupId>
+				<artifactId>metova-android-core-test</artifactId>
+				<version>2.0.0-SNAPSHOT</version>
+				<type>apk</type>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
