@@ -106,8 +106,7 @@ public class QueuedHttpClient {
             Log.d( TAG, "Request submitted: " + request.getRequestLine() + " to " + request.getURI() );
         }
 
-        //TODO save the callback
-        queue.add( asyncHttpUriRequest );
+        getQueue().add( asyncHttpUriRequest );
     }
 
     public void start() {
@@ -116,7 +115,7 @@ public class QueuedHttpClient {
         synchronized (queue) {
             performDispatches = true;
             //start the task
-            dispatchFuture = executor.submit( dispatchRunnable );
+            dispatchFuture = getExecutor().submit( dispatchRunnable );
             Log.d( TAG, "Successfully started dispatch task." );
         }
     }
@@ -128,7 +127,7 @@ public class QueuedHttpClient {
             performDispatches = false;
             //stop the task
             dispatchFuture.cancel( true );
-            Log.d( TAG, "Successfully stopped dispatch task. Remaining queue items: " + queue.size() );
+            Log.d( TAG, "Successfully stopped dispatch task. Remaining queue items: " + getQueue().size() );
         }
     }
 
@@ -141,7 +140,7 @@ public class QueuedHttpClient {
             Log.v( TAG, "Full request: " + request );
         }
 
-        final Response response = HttpClients.execute( httpClient, request );
+        final Response response = HttpClients.execute( getHttpClient(), request );
 
         if ( Log.isLoggable( TAG, Log.DEBUG ) ) {
             Log.d( TAG, "Completed http call with code: " + response.getStatusCode() );
@@ -152,7 +151,7 @@ public class QueuedHttpClient {
 
         if ( callback != null ) {
 
-            executor.submit( new Runnable() {
+            getExecutor().submit( new Runnable() {
 
                 @Override
                 public void run() {
@@ -171,7 +170,7 @@ public class QueuedHttpClient {
 
                 try {
 
-                    AsyncHttpUriRequest asyncHttpUriRequest = queue.take();
+                    AsyncHttpUriRequest asyncHttpUriRequest = getQueue().take();
                     HttpUriRequest request = asyncHttpUriRequest.getRequest();
                     AsyncHttpResponseCallback callback = asyncHttpUriRequest.getCallback();
 
@@ -181,11 +180,26 @@ public class QueuedHttpClient {
                     }
                 }
                 catch (InterruptedException e) {
-                    //TODO ASDK-116
+                    Log.w( TAG, "Interrupted while waiting for new dispatchable http request on queue.", e );
                 }
 
             }
         }
+    }
+
+    public ExecutorService getExecutor() {
+
+        return executor;
+    }
+
+    public HttpClient getHttpClient() {
+
+        return httpClient;
+    }
+
+    public BlockingQueue<AsyncHttpUriRequest> getQueue() {
+
+        return queue;
     }
 
 }
