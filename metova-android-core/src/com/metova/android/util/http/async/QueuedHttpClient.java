@@ -178,6 +178,9 @@ public class QueuedHttpClient {
                      */
                     Log.d( TAG, "Interrupted while waiting for new dispatchable http request on queue." );
                 }
+                catch (Exception e) {
+                    Log.e( TAG, "Failed to dispatch request.", e );
+                }
 
             }
         }
