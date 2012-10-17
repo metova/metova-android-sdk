@@ -95,23 +95,22 @@ public class QueuedHttpClient {
 
     public void submit( AsyncHttpUriRequest asyncHttpUriRequest ) {
 
-        if ( Log.isLoggable( TAG, Log.DEBUG ) ) {
+        final HttpUriRequest request = asyncHttpUriRequest.getRequest();
+        final AsyncHttpResponseCallback callback = asyncHttpUriRequest.getCallback();
 
-            final HttpUriRequest request = asyncHttpUriRequest.getRequest();
-            final AsyncHttpResponseCallback callback = asyncHttpUriRequest.getCallback();
-
-            StringBuilder stringBuilder = new StringBuilder( "Request submitted: " );
-            stringBuilder.append( request.getRequestLine() ).append( " to " ).append( request.getURI() );
-            stringBuilder.append( ( callback == null ) ? " without callback" : " with callback" );
-            Log.d( TAG, "Request submitted: " + request.getRequestLine() + " to " + request.getURI() );
-        }
+        StringBuilder stringBuilder = new StringBuilder( "Request submitted: " );
+        stringBuilder.append( request.getRequestLine() ).append( " to " ).append( request.getURI() );
+        stringBuilder.append( ( callback == null ) ? " without callback" : " with callback" );
+        Log.d( TAG, "Request submitted: " + request.getRequestLine() + " to " + request.getURI() );
 
         getQueue().add( asyncHttpUriRequest );
+
+        Log.d( TAG, "Current queue size: " + getQueue().size() );
     }
 
     public void start() {
 
-        Log.d( TAG, "Received request to start dispatches." );
+        Log.d( TAG, "Received request to start dispatches. " + getQueue().size() + " items queued for dispatch." );
         synchronized (queue) {
             performDispatches = true;
             //start the task
@@ -126,39 +125,32 @@ public class QueuedHttpClient {
         synchronized (queue) {
             performDispatches = false;
             //stop the task
-            dispatchFuture.cancel( true );
+            if ( dispatchFuture != null ) {
+
+                dispatchFuture.cancel( true );
+            }
             Log.d( TAG, "Successfully stopped dispatch task. Remaining queue items: " + getQueue().size() );
         }
     }
 
     protected void dispatch( final HttpUriRequest request, final AsyncHttpResponseCallback callback ) {
 
-        if ( Log.isLoggable( TAG, Log.DEBUG ) ) {
-            Log.d( TAG, "Attempting to dispatch request: " + request.getRequestLine() );
-        }
+        Log.d( TAG, "Attempting to dispatch request: " + request.getRequestLine() );
+
         if ( Log.isLoggable( TAG, Log.VERBOSE ) ) {
             Log.v( TAG, "Full request: " + request );
         }
 
         final Response response = HttpClients.execute( getHttpClient(), request );
 
-        if ( Log.isLoggable( TAG, Log.DEBUG ) ) {
-            Log.d( TAG, "Completed http call with code: " + response.getStatusCode() );
-            if ( callback != null ) {
-                Log.d( TAG, "Invoking callback." );
-            }
+        Log.d( TAG, "Completed request '" + request.getRequestLine() + "' with code: " + response.getStatusCode() );
+        if ( callback != null ) {
+            Log.d( TAG, "Invoking callback." );
         }
 
         if ( callback != null ) {
 
-            getExecutor().submit( new Runnable() {
-
-                @Override
-                public void run() {
-
-                    callback.onResponseReceived( response );
-                }
-            } );
+            callback.onResponseReceived( response );
         }
     }
 
@@ -180,7 +172,14 @@ public class QueuedHttpClient {
                     }
                 }
                 catch (InterruptedException e) {
-                    Log.w( TAG, "Interrupted while waiting for new dispatchable http request on queue.", e );
+                    /*
+                     * This is not an error. We intend to interrupt this task via the stop() method
+                     * whenever network connectivity is lost, so let's not throw up errors about it.
+                     */
+                    Log.d( TAG, "Interrupted while waiting for new dispatchable http request on queue." );
+                }
+                catch (Exception e) {
+                    Log.e( TAG, "Failed to dispatch request.", e );
                 }
 
             }

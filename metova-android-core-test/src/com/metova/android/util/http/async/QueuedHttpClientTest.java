@@ -1,9 +1,11 @@
 package com.metova.android.util.http.async;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
@@ -12,6 +14,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import junit.framework.TestCase;
 
+import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -88,6 +91,9 @@ public class QueuedHttpClientTest extends TestCase {
     public void testRequestsDispatchedInOrder() throws Exception {
 
         queuedHttpClient = new QueuedHttpClient( mockHttpClient, executorService, blockingQueue );
+
+        HttpResponse mockHttpResponse = mock( HttpResponse.class );
+        when( mockHttpClient.execute( any( HttpUriRequest.class ) ) ).thenReturn( mockHttpResponse );
 
         HttpUriRequest request1 = new HttpPost();
         HttpUriRequest request2 = new HttpGet();
