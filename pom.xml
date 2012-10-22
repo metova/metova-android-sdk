@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.metova</groupId>
 	<artifactId>metova-android</artifactId>
-	<version>2.0.1-SNAPSHOT</version>
+	<version>2.0.1</version>
 	<name>${project.artifactId}</name>
 	<packaging>pom</packaging>
 	<properties>
 		<!-- The following should be overridden to sign an application for release builds. -->
-		<android.sign.keypass></android.sign.keypass>
-		<android.sign.keystore></android.sign.keystore>
-		<android.sign.alias></android.sign.alias>
-		<android.sign.storepass></android.sign.storepass>
+		<android.sign.keypass />
+		<android.sign.keystore />
+		<android.sign.alias />
+		<android.sign.storepass />
 		
 		<android.android.version>1.6_r2</android.android.version>
 		<android.api.level>16</android.api.level>
@@ -128,7 +127,7 @@
 								<phase>package</phase>
 								<inherited>true</inherited>
 								<configuration>
-									<archiveDirectory></archiveDirectory>
+									<archiveDirectory />
 									<includes>
 										<include>target/*.apk</include>
 									</includes>
@@ -207,13 +206,13 @@
 			<dependency>
 				<groupId>com.metova</groupId>
 				<artifactId>metova-android-core</artifactId>
-				<version>2.0.1-SNAPSHOT</version>
+				<version>2.0.1</version>
 				<type>apklib</type>
 			</dependency>
 			<dependency>
 				<groupId>com.metova</groupId>
 				<artifactId>metova-android-core-test</artifactId>
-				<version>2.0.1-SNAPSHOT</version>
+				<version>2.0.1</version>
 				<type>apk</type>
 			</dependency>
 		</dependencies>
