@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.metova</groupId>
 	<artifactId>metova-android</artifactId>
-	<version>2.0.5-SNAPSHOT</version>
+	<version>2.0.6-SNAPSHOT</version>
 	<name>${project.artifactId}</name>
 	<packaging>pom</packaging>
 	<properties>
@@ -19,7 +19,7 @@
 		<android.support.version>r7</android.support.version>
 
 		<!-- Metova-specific deployment properties. -->
-		<metova.maven.app7.version>1.0.6</metova.maven.app7.version>
+		<metova.maven.app7.version>1.0.10</metova.maven.app7.version>
 	</properties>
 	<scm>
                 <connection>scm:git:git@github.com:metova/metova-android-sdk.git</connection>
