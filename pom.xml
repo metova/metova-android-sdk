@@ -111,7 +111,7 @@
 	<profiles>
 		<profile>
 			<!-- Sign and zip-align the APK. -->
-			<id>prepare-apk</id>
+			<id>deploy-apk</id>
 			<build>
 				<plugins>
 					<plugin>
@@ -176,13 +176,6 @@
 							</sign>
 						</configuration>
 					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>deploy-application</id>
-			<build>
-				<plugins>
 					<plugin>
 						<groupId>com.metova</groupId>
 						<artifactId>metova-maven-app7</artifactId>
