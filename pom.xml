@@ -19,12 +19,12 @@
 		<android.support.version>r7</android.support.version>
 
 		<!-- Metova-specific deployment properties. -->
-		<metova.maven.app7.version>1.0.12</metova.maven.app7.version>
+		<metova.maven.app7.version>1.0.13</metova.maven.app7.version>
 	</properties>
 	<scm>
-                <connection>scm:git:git@github.com:metova/metova-android-sdk.git</connection>
-                <developerConnection>scm:git:git@github.com:metova/metova-android-sdk.git</developerConnection>
-        </scm>
+		<connection>scm:git:git@github.com:metova/metova-android-sdk.git</connection>
+		<developerConnection>scm:git:git@github.com:metova/metova-android-sdk.git</developerConnection>
+	</scm>
 	<modules>
 		<module>metova-android-core</module>
 		<module>metova-android-core-test</module>
