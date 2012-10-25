@@ -32,6 +32,7 @@ public class QueuedHttpClient {
     private final BlockingQueue<AsyncHttpRequestBase> queue;
     private final ExecutorService executor;
     private final HttpClient httpClient;
+    private final Class<? extends RetryStrategy> retryStrategyType;
 
     private boolean performDispatches;
     private Runnable dispatchRunnable;
@@ -49,10 +50,17 @@ public class QueuedHttpClient {
 
     public QueuedHttpClient(ThreadPoolExecutor executor, BlockingQueue<AsyncHttpRequestBase> queue) {
 
-        this( new DefaultHttpClient(), executor, queue );
+        this( new DefaultHttpClient(), executor, queue, DefaultRetryStrategy.class );
     }
 
-    public QueuedHttpClient(final HttpClient httpClient, final ExecutorService executor, final BlockingQueue<AsyncHttpRequestBase> queue) {
+    /**
+     * 
+     * @param httpClient the HttpClient to use for outgoing requests. May not be null.
+     * @param executor the ExecutorService to use for asynchronous request dispatching. May not be null.
+     * @param queue the Queue on which unsent requests will be held. May not be null.
+     * @param retryStrategyType the optional RetryStrategy type to be used for failed requests. May be null.
+     */
+    public QueuedHttpClient(final HttpClient httpClient, final ExecutorService executor, final BlockingQueue<AsyncHttpRequestBase> queue, final Class<? extends RetryStrategy> retryStrategyType) {
 
         Assertions.notNull( "queue", queue );
         Assertions.notNull( "executor", executor );
@@ -61,9 +69,10 @@ public class QueuedHttpClient {
         this.queue = queue;
         this.executor = executor;
         this.httpClient = httpClient;
+        this.retryStrategyType = retryStrategyType;
 
         if ( Log.isLoggable( TAG, Log.DEBUG ) ) {
-            Log.d( TAG, "Constructed with queue=" + queue + "; executor=" + executor + "; httpClient=" + httpClient );
+            Log.d( TAG, "Constructed with queue=" + queue + "; executor=" + executor + "; httpClient=" + httpClient + "; retryStrategyType=" + retryStrategyType );
         }
 
         this.performDispatches = false;
@@ -137,24 +146,80 @@ public class QueuedHttpClient {
 
         Log.d( TAG, "Attempting to dispatch request: " + request.getRequestLine() );
 
-        if ( Log.isLoggable( TAG, Log.VERBOSE ) ) {
-            Log.v( TAG, "Full request: " + request );
+        RetryStrategy retryStrategy = null;
+
+        if ( retryStrategyType != null ) {
+            try {
+                retryStrategy = retryStrategyType.newInstance();
+            }
+            catch (IllegalAccessException e) {
+                Log.w( TAG, "Error encountered instantiating RetryStrategy type: " + retryStrategyType, e );
+            }
+            catch (InstantiationException e) {
+                Log.w( TAG, "Error encountered instantiating RetryStrategy type: " + retryStrategyType, e );
+            }
         }
 
-        final Response response = HttpClients.execute( getHttpClient(), request );
+        final Response response = dispatchWithRetries( request, retryStrategy );
 
-        Log.d( TAG, "Completed request '" + request.getRequestLine() + "' with code: " + response.getStatusCode() );
-        if ( callbackType != null ) {
-            Log.d( TAG, "Invoking callback." );
+        if ( response == null ) {
 
+            Log.d( TAG, "Abandoning attempts to dispatch request " + request.getRequestLine() );
+        }
+        else {
+
+            Log.d( TAG, "Completed request '" + request.getRequestLine() + "' with code: " + response.getStatusCode() );
+
+            invokeCallback( callbackType, response );
+        }
+    }
+
+    private Response dispatchWithRetries( HttpRequestBase request, RetryStrategy retryStrategy ) {
+
+        boolean retry = true;
+        Response response = null;
+        while (retry) {
+
+            Throwable throwable = null;
             try {
+
+                response = HttpClients.execute( getHttpClient(), request );
+                Log.d( TAG, "Received response " + response.getHttpResponse().getStatusLine() + " for request " + request.getRequestLine() );
+            }
+            catch (Throwable t) {
+
+                Log.w( TAG, "Error encountered sending request.", t );
+                throwable = t;
+            }
+
+            if ( response != null && response.isSuccessful() ) {
+
+                retry = false;
+            }
+            else {
+
+                retry = ( null == retryStrategy ) ? false : retryStrategy.onRetry( response, throwable );
+            }
+        }
+        return response;
+    }
+
+    private void invokeCallback( Class<? extends AsyncHttpResponseCallback> callbackType, Response response ) {
+
+        if ( callbackType != null ) {
+
+            Log.d( TAG, "Invoking callback." );
+            try {
+
                 AsyncHttpResponseCallback callback = callbackType.newInstance();
                 callback.onResponseReceived( response );
             }
             catch (IllegalAccessException e) {
+
                 Log.e( TAG, "Error attempting to instantiate callback type.", e );
             }
             catch (InstantiationException e) {
+
                 Log.e( TAG, "Error attempting to instantiate callback type.", e );
             }
         }
