@@ -10,7 +10,7 @@
 	<artifactId>metova-android-core-test</artifactId>
 	<packaging>apk</packaging>
 	<version>2.0.12-SNAPSHOT</version>
-	<name>Metova Android Archetype Test</name>
+	<name>${project.artifactId}</name>
 	<properties>
 		<!-- Your target SDK version -->
 		<android.application.targetSdkVersion>16</android.application.targetSdkVersion>

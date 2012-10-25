@@ -19,6 +19,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.mockito.InOrder;
 
@@ -27,13 +28,13 @@ public class QueuedHttpClientTest extends TestCase {
     private QueuedHttpClient queuedHttpClient;
     private HttpClient mockHttpClient;
     private ExecutorService executorService;
-    private BlockingQueue<AsyncHttpUriRequest> blockingQueue;
+    private BlockingQueue<AsyncHttpRequestBase> blockingQueue;
 
     @Override
     public void setUp() {
 
         mockHttpClient = mock( HttpClient.class );
-        blockingQueue = new LinkedBlockingQueue<AsyncHttpUriRequest>();
+        blockingQueue = new LinkedBlockingQueue<AsyncHttpRequestBase>();
         //single thread needed to ensure serial dispatch order
         executorService = Executors.newSingleThreadExecutor();
     }
@@ -95,9 +96,9 @@ public class QueuedHttpClientTest extends TestCase {
         HttpResponse mockHttpResponse = mock( HttpResponse.class );
         when( mockHttpClient.execute( any( HttpUriRequest.class ) ) ).thenReturn( mockHttpResponse );
 
-        HttpUriRequest request1 = new HttpPost();
-        HttpUriRequest request2 = new HttpGet();
-        HttpUriRequest request3 = new HttpDelete();
+        HttpRequestBase request1 = new HttpPost();
+        HttpRequestBase request2 = new HttpGet();
+        HttpRequestBase request3 = new HttpDelete();
         queuedHttpClient.submit( request1 );
         queuedHttpClient.submit( request2 );
         queuedHttpClient.submit( request3 );
