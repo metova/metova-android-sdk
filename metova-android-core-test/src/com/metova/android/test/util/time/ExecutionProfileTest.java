@@ -15,7 +15,7 @@ public class ExecutionProfileTest extends AndroidTestCase {
         Thread.sleep( 2000 );
         profile.stop();
 
-        assertTrue( Math.abs( EXECUTION_TIME - profile.time() ) <= 2 );
+        assertTrue( Math.abs( EXECUTION_TIME - profile.time() ) <= 1000 );
         assertEquals( profile.time(), ( profile.getStopTime() - profile.getStartTime() ) );
     }
 }
