@@ -56,28 +56,6 @@
 					</excludes>
 				</configuration>
 			</plugin>
-			<!--plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.6.1</version>
-				<configuration>
-					<aggregate>false</aggregate>
-					<skip>true</skip>
-					<bootclasspathArtifacts>
-						<bootclasspathArtifact>
-							<groupId>android</groupId>
-							<artifactId>android</artifactId>
-							<version>${android.android.version}</version>
-						</bootclasspathArtifact>
-					</bootclasspathArtifacts>
-					<links>
-						<link>http://developer.android.com/reference/</link>
-					</links>
-					<show>protected</show>
-					<skip>false</skip>
-					<verbose>true</verbose>
-				</configuration>
-			</plugin-->
 			<plugin>
 				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 				<artifactId>android-maven-plugin</artifactId>
@@ -224,15 +202,15 @@
 		</dependency>
 	</dependencies>
 	<distributionManagement>
-                <repository>
-                        <id>metova</id>
-                        <name>Metova Repo</name>
-                        <url>http://repo.metova.com/nexus/content/repositories/metova/</url>
-                </repository>
-                <snapshotRepository>
-                        <id>metova-snapshots</id>
-                        <name>Metova Repo</name>
-                        <url>http://repo.metova.com/nexus/content/repositories/metova-snapshots/</url>
-                </snapshotRepository>
-        </distributionManagement>
+		<repository>
+				<id>metova</id>
+				<name>Metova Repo</name>
+				<url>http://repo.metova.com/nexus/content/repositories/metova-external/</url>
+		</repository>
+		<snapshotRepository>
+				<id>metova-snapshots</id>
+				<name>Metova Repo</name>
+				<url>http://repo.metova.com/nexus/content/repositories/metova-snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
 </project>
