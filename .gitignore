@@ -1,0 +1,6 @@
+metova-android-core/bin/*
+metova-android-core/target/*
+metova-android-core/gen/*
+metova-android-core-test/bin/*
+metova-android-core-test/target/*
+metova-android-core-test/gen/*
