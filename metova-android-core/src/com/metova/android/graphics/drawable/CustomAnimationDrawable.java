@@ -29,6 +29,13 @@ public class CustomAnimationDrawable extends AnimationDrawable {
         }
     }
 
+    /**
+     * Constructs an empty {@link CustomAnimationDrawable}
+     */
+    public CustomAnimationDrawable() {
+
+    }
+
     @Override
     public void stop() {
 
