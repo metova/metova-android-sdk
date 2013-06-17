@@ -12,9 +12,11 @@
 		<android.sign.keystore />
 		<android.sign.alias />
 		<android.sign.storepass />
+
 		<android.android.version>1.6_r2</android.android.version>
 		<android.api.level>17</android.api.level>
 		<android.maven.plugin.version>3.3.2</android.maven.plugin.version>
+
 		<android.support.version>12</android.support.version>
 
 		<!-- Metova-specific deployment properties. -->
