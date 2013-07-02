@@ -12,11 +12,9 @@
 		<android.sign.keystore />
 		<android.sign.alias />
 		<android.sign.storepass />
-
 		<android.android.version>1.6_r2</android.android.version>
 		<android.api.level>17</android.api.level>
 		<android.maven.plugin.version>3.3.2</android.maven.plugin.version>
-
 		<android.support.version>12</android.support.version>
 
 		<!-- Metova-specific deployment properties. -->
@@ -175,6 +173,107 @@
 									<goal>android-app7-upload</goal>
 									<goal>generate-mobile-download-link</goal>
 								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+		    <!-- Create a monkeytalk-instrumented build -->
+			<id>monkeytalk</id>
+			<properties>
+				<aspectj.version>1.7.3</aspectj.version>
+			</properties>
+			<dependencies>
+				<dependency>
+					<groupId>org.aspectj</groupId>
+					<artifactId>aspectjrt</artifactId>
+					<version>${aspectj.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>com.monkeytalk</groupId>
+					<artifactId>monkeytalk-agent</artifactId>
+					<version>1.0.50</version>
+				</dependency>
+			</dependencies>
+			<build>
+				<finalName>${project.artifactId}-monkeytalk-${project.version}</finalName>
+				<plugins>
+    <!-- AspectJ plugin weaves the Monkeytalk agent into the application -->
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>aspectj-maven-plugin</artifactId>
+						<version>1.4</version>
+						<configuration>
+							<complianceLevel>1.6</complianceLevel>
+							<source>1.6</source>
+							<target>1.6</target>
+							<showWeaveInfo>true</showWeaveInfo>
+							<aspectLibraries>
+								<aspectLibrary>
+									<groupId>com.monkeytalk</groupId>
+									<artifactId>monkeytalk-agent</artifactId>
+								</aspectLibrary>
+							</aspectLibraries>
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>compile</goal>
+								</goals>
+							</execution>
+						</executions>
+						<dependencies>
+							<dependency>
+								<groupId>org.aspectj</groupId>
+								<artifactId>aspectjtools</artifactId>
+								<version>${aspectj.version}</version>
+							</dependency>
+						</dependencies>
+					</plugin>
+	<!-- Adds the necessary Monkeytalk permissions to AndroidManifest.xml on the fly -->
+					<plugin>
+						<groupId>com.google.code.maven-replacer-plugin</groupId>
+						<artifactId>replacer</artifactId>
+						<version>1.5.2</version>
+						<executions>
+							<execution>
+								<phase>prepare-package</phase>
+								<goals>
+									<goal>replace</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<regexFlags>
+								<regexFlag>DOTALL</regexFlag>
+								<regexFlag>MULTILINE</regexFlag>
+							</regexFlags>
+							<file>${project.basedir}/AndroidManifest.xml</file>
+							<outputFile>${project.build.directory}/AndroidManifest.xml</outputFile>
+							<replacements>
+								<replacement>
+									<token>(.*?manifest.*?&gt;)(.*?&lt;/manifest&gt;)</token>
+									<value>$1&lt;uses-permission android:name="android.permission.GET_TASKS"/&gt;&lt;uses-permission android:name="android.permission.INTERNET" /&gt;$2</value>
+								</replacement>
+							</replacements>
+						</configuration>
+					</plugin>
+	<!-- Tell a-m-p to use our modified AndroidManifest.xml -->
+					<plugin>
+						<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+						<artifactId>android-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>default-apk</id>
+								<phase>package</phase>
+								<goals>
+									<goal>apk</goal>
+								</goals>
+								<configuration combine.children="append">
+									<androidManifestFile>${project.build.directory}/AndroidManifest.xml</androidManifestFile>
+								</configuration>
 							</execution>
 						</executions>
 					</plugin>
