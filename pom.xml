@@ -14,11 +14,16 @@
 		<android.sign.storepass />
 		<android.android.version>1.6_r2</android.android.version>
 		<android.api.level>17</android.api.level>
-		<android.maven.plugin.version>3.3.2</android.maven.plugin.version>
+		<android.maven.plugin.version>3.6.0</android.maven.plugin.version>
 		<android.support.version>12</android.support.version>
+
+		<!-- Override this if your monkeytalk script directory isn't ${artifactId}-monkeytalk -->
+		<metova.maven.monkeytalk.scriptdirectory />
 
 		<!-- Metova-specific deployment properties. -->
 		<metova.maven.app7.version>1.0.35.2</metova.maven.app7.version>
+		<metova.maven.monkeytalk.version>1.0.1-SNAPSHOT</metova.maven.monkeytalk.version>
+
 	</properties>
 	<scm>
 		<connection>scm:git:git@github.com:metova/metova-android-sdk.git</connection>
@@ -194,13 +199,13 @@
 				<dependency>
 					<groupId>com.monkeytalk</groupId>
 					<artifactId>monkeytalk-agent</artifactId>
-					<version>1.0.50</version>
+					<version>1.0.53</version>
 				</dependency>
 			</dependencies>
 			<build>
 				<finalName>${project.artifactId}-monkeytalk-${project.version}</finalName>
 				<plugins>
-    <!-- AspectJ plugin weaves the Monkeytalk agent into the application -->
+    				<!-- AspectJ plugin weaves the Monkeytalk agent into the application -->
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>aspectj-maven-plugin</artifactId>
@@ -232,7 +237,7 @@
 							</dependency>
 						</dependencies>
 					</plugin>
-	<!-- Adds the necessary Monkeytalk permissions to AndroidManifest.xml on the fly -->
+					<!-- Adds the necessary Monkeytalk permissions to AndroidManifest.xml on the fly -->
 					<plugin>
 						<groupId>com.google.code.maven-replacer-plugin</groupId>
 						<artifactId>replacer</artifactId>
@@ -260,7 +265,7 @@
 							</replacements>
 						</configuration>
 					</plugin>
-	<!-- Tell a-m-p to use our modified AndroidManifest.xml -->
+					<!-- Tell a-m-p to use our modified AndroidManifest.xml -->
 					<plugin>
 						<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 						<artifactId>android-maven-plugin</artifactId>
@@ -274,6 +279,20 @@
 								<configuration combine.children="append">
 									<androidManifestFile>${project.build.directory}/AndroidManifest.xml</androidManifestFile>
 								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>com.metova</groupId>
+						<artifactId>metova-maven-monkeytalk</artifactId>
+						<version>${metova.maven.monkeytalk.version}</version>
+						<executions>
+							<execution>
+								<phase>deploy</phase>
+								<goals>
+									<goal>install-apk</goal>
+									<goal>run-scripts</goal>
+								</goals>
 							</execution>
 						</executions>
 					</plugin>
