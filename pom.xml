@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.metova</groupId>
 	<artifactId>metova-android</artifactId>
-	<version>2.0.22-SNAPSHOT</version>
+	<version>2.0.22</version>
 	<name>${project.artifactId}</name>
 	<packaging>pom</packaging>
 	<properties>
@@ -305,13 +305,13 @@
 			<dependency>
 				<groupId>com.metova</groupId>
 				<artifactId>metova-android-core</artifactId>
-				<version>2.0.22-SNAPSHOT</version>
+				<version>2.0.22</version>
 				<type>apklib</type>
 			</dependency>
 			<dependency>
 				<groupId>com.metova</groupId>
 				<artifactId>metova-android-core-test</artifactId>
-				<version>2.0.22-SNAPSHOT</version>
+				<version>2.0.22</version>
 				<type>apk</type>
 			</dependency>
 		</dependencies>
