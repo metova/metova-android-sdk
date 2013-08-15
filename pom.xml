@@ -282,7 +282,8 @@
 							</execution>
 						</executions>
 					</plugin>
-					<plugin>
+					<!-- Uncomment this when this part is ready to run again -->
+					<!-- <plugin>
 						<groupId>com.metova</groupId>
 						<artifactId>metova-maven-monkeytalk</artifactId>
 						<version>${metova.maven.monkeytalk.version}</version>
@@ -295,7 +296,7 @@
 								</goals>
 							</execution>
 						</executions>
-					</plugin>
+					</plugin> -->
 				</plugins>
 			</build>
 		</profile>
