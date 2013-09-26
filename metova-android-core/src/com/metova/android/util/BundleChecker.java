@@ -60,21 +60,7 @@ public class BundleChecker {
      */
     public static <T> T getExtra( final String key, final Bundle... bundles ) {
 
-        Bundle bundle = null;
-
-        for (Bundle b : bundles) {
-
-            if ( b != null && b.containsKey( key ) ) {
-
-                bundle = b;
-                break;
-            }
-        }
-
-        @SuppressWarnings( "unchecked" )
-        T object = ( bundle == null ) ? null : (T) bundle.get( key );
-
-        return object;
+		return getExtra(key, null, bundles);
     }
 
 	/**
@@ -84,15 +70,15 @@ public class BundleChecker {
 	 * <p>
 	 * <b>Sample use in a Fragment:</b>
 	 * <p>
-	 * 
+	 *
 	 * <pre>
 	 * public void onActivityCreated(Bundle savedInstanceState){
-	 * 
+	 *
 	 * 	super.onActivityCreated(savedInstanceState);
 	 * 	long id = BundleChecker.getExtra(&quot;id&quot;, -1L, getArguments(), savedInstanceState);
 	 * }
 	 * </pre>
-	 * 
+	 *
 	 * @param key
 	 *            - The key with which to search for in the given <b>bundles</b>
 	 * @param defaultValue
