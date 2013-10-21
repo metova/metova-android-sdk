@@ -15,7 +15,7 @@ public class BundleChecker {
       public void onActivityCreated( Bundle savedInstanceState ) {
 
         super.onActivityCreated( savedInstanceState );
-        News news = BundleChecker.getExtraOrThrow( "key", new Bundle[]{ getArguments(), savedInstanceState } );
+        News news = BundleChecker.getExtraOrThrow( "key", getArguments(), savedInstanceState );
       }
       </pre>
      *
@@ -46,7 +46,7 @@ public class BundleChecker {
       public void onActivityCreated( Bundle savedInstanceState ) {
 
         super.onActivityCreated( savedInstanceState );
-        String key = BundleChecker.getExtra( "key", new Bundle[]{ getArguments(), savedInstanceState } );
+        String key = BundleChecker.getExtra( "key", getArguments(), savedInstanceState );
         if(key != null) {
 
             //...
@@ -60,52 +60,52 @@ public class BundleChecker {
      */
     public static <T> T getExtra( final String key, final Bundle... bundles ) {
 
-		return getExtra(key, null, bundles);
+        return getExtraWithDefaultValue( key, null, bundles );
     }
 
-	/**
-	 * Convenience method for retrieving an object (no primitives) from a
-	 * {@link android.os.Bundle}. If more than one of the Bundles passed
-	 * contains an entry with the given key, the first object found is returned.
-	 * <p>
-	 * <b>Sample use in a Fragment:</b>
-	 * <p>
-	 *
-	 * <pre>
-	 * public void onActivityCreated(Bundle savedInstanceState){
-	 *
-	 * 	super.onActivityCreated(savedInstanceState);
-	 * 	long id = BundleChecker.getExtra(&quot;id&quot;, -1L, getArguments(), savedInstanceState);
-	 * }
-	 * </pre>
-	 *
-	 * @param key
-	 *            - The key with which to search for in the given <b>bundles</b>
-	 * @param defaultValue
-	 *            - The value returned if the <b>key</b> cannot be found in a
-	 *            bundle
-	 * @param bundles
-	 *            - an array of {@link android.os.Bundle} to look for an entry
-	 *            with the given <b>key</b>
-	 * @return The entry with the given key, or {@code null} if there is no
-	 *         entry with the given key
-	 */
-	public static <T> T getExtra(final String key, T defaultValue, final Bundle... bundles){
+    /**
+     * Convenience method for retrieving an object (no primitives) from a
+     * {@link android.os.Bundle}. If more than one of the Bundles passed
+     * contains an entry with the given key, the first object found is returned.
+     * <p>
+     * <b>Sample use in a Fragment:</b>
+     * <p>
+     *
+     * <pre>
+     * public void onActivityCreated(Bundle savedInstanceState){
+     *
+     * 	super.onActivityCreated(savedInstanceState);
+     * 	long id = BundleChecker.getExtra(&quot;id&quot;, -1L, getArguments(), savedInstanceState);
+     * }
+     * </pre>
+     *
+     * @param key
+     *            - The key with which to search for in the given <b>bundles</b>
+     * @param defaultValue
+     *            - The value returned if the <b>key</b> cannot be found in a
+     *            bundle
+     * @param bundles
+     *            - an array of {@link android.os.Bundle} to look for an entry
+     *            with the given <b>key</b>
+     * @return The entry with the given key, or {@code null} if there is no
+     *         entry with the given key
+     */
+    public static <T> T getExtraWithDefaultValue( final String key, T defaultValue, final Bundle... bundles ) {
 
-		Bundle bundle = null;
+        Bundle bundle = null;
 
-		for(Bundle b : bundles) {
+        for (Bundle b : bundles) {
 
-			if(b != null && b.containsKey(key)) {
+            if ( b != null && b.containsKey( key ) ) {
 
-				bundle = b;
-				break;
-			}
-		}
+                bundle = b;
+                break;
+            }
+        }
 
-		@SuppressWarnings("unchecked")
-		T object = (bundle == null) ? defaultValue : (T) bundle.get(key);
+        @SuppressWarnings( "unchecked" )
+        T object = ( bundle == null ) ? defaultValue : (T) bundle.get( key );
 
-		return object;
-	}
+        return object;
+    }
 }

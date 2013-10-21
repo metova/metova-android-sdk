@@ -86,6 +86,18 @@ public class BundleCheckerTest extends TestCase {
         assertNotNull( output );
     }
 
+    public void testGetDefault() throws Throwable {
+
+        final String key = "test_extra";
+        final Integer value = 1;
+
+        Bundle bundle1 = new Bundle();
+        Bundle bundle2 = new Bundle();
+
+        Integer output = BundleChecker.getExtraWithDefaultValue( key, value, bundle1, bundle2 );
+        assertEquals( output, value );
+    }
+
     public void testGetString() throws Throwable {
 
         final String key = "test_extra";
