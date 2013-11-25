@@ -8,18 +8,20 @@
         android:targetSdkVersion="15" />
 
     <uses-permission android:name="android.permission.INTERNET" />
-    
-    <!-- The sdk is just an apklib, so we need an actual application to test.
+
+    <!--
+    The sdk is just an apklib, so we need an actual application to test.
     This project is both the instrumentation AND the project under test, so this
-    package is correct. -->
+    package is correct.
+    -->
     <instrumentation
         android:name="android.test.InstrumentationTestRunner"
         android:targetPackage="com.metova.android.test" />
-    
+
     <application
+        android:name="com.metova.android.CoreTestApplication"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:name="com.metova.android.CoreTestApplication"
         android:theme="@style/AppTheme" >
         <activity
             android:name=".MainActivity"
@@ -30,8 +32,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="com.metova.android.event.OttoMessageReceivingActivityTest$FooActivity" />
+
         <service android:name="com.metova.android.service.persistence.DatabaseService" />
-        
+
         <uses-library android:name="android.test.runner" />
     </application>
 
