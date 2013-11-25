@@ -12,18 +12,18 @@
 		<android.sign.keystore />
 		<android.sign.alias />
 		<android.sign.storepass />
-		<android.android.version>1.6_r2</android.android.version>
-		<android.api.level>17</android.api.level>
+		<android.android.version>4.3_r1</android.android.version>
+		<android.api.level>18</android.api.level>
 		<android.maven.plugin.version>3.6.0</android.maven.plugin.version>
-		<android.support.version>12</android.support.version>
+		<android.support.version>18</android.support.version>
 
 		<!-- Override this if your monkeytalk script directory isn't ${artifactId}-monkeytalk -->
 		<metova.maven.monkeytalk.scriptdirectory />
-
+		<actionbarsherlock.version>4.2.0</actionbarsherlock.version>
+		
 		<!-- Metova-specific deployment properties. -->
 		<metova.maven.app7.version>1.0.35.2</metova.maven.app7.version>
 		<metova.maven.monkeytalk.version>1.0.1-SNAPSHOT</metova.maven.monkeytalk.version>
-
 	</properties>
 	<scm>
 		<connection>scm:git:git@github.com:metova/metova-android-sdk.git</connection>
@@ -40,6 +40,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
 				<version>2.7.1</version>
+				<inherited>true</inherited>
 				<executions>
 					<execution>
 						<phase>process-sources</phase>
@@ -314,6 +315,20 @@
 				<artifactId>metova-android-core-test</artifactId>
 				<version>2.0.29-SNAPSHOT</version>
 				<type>apk</type>
+			</dependency>
+					<!-- ActionBarSherlock -->
+			<dependency>
+				<groupId>com.actionbarsherlock</groupId>
+				<artifactId>actionbarsherlock</artifactId>
+				<version>${actionbarsherlock.version}</version>
+				<type>apklib</type>
+			</dependency>
+			<dependency>
+				<groupId>com.actionbarsherlock</groupId>
+				<artifactId>actionbarsherlock</artifactId>
+				<version>${actionbarsherlock.version}</version>
+				<type>jar</type>
+				<scope>provided</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

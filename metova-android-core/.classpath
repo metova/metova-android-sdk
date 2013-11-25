@@ -2,10 +2,17 @@
 <classpath>
 	<classpathentry including="**/*.java" kind="src" path="src"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+        <classpathentry exported="true" kind="var" path="M2_REPO/com/google/android/support-v4/18/support-v4-18.jar" sourcepath="/ANDROID_HOME/extras/android/support/v4/src"/>
 	<classpathentry exported="true" kind="var" path="M2_REPO/org/apache/james/apache-mime4j-core/0.7.2/apache-mime4j-core-0.7.2.jar"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry exported="true" kind="var" path="M2_REPO/org/apache/httpcomponents/httpmime/4.2.1/httpmime-4.2.1.jar"/>
 	<classpathentry kind="src" path="gen"/>
+	<classpathentry exported="true" kind="var" path="M2_REPO/com/squareup/otto/1.3.4/otto-1.3.4.jar"/>
+        <classpathentry exported="true" kind="var" path="M2_REPO/org/roboguice/roboguice/2.0.metova-2/roboguice-2.0.metova-2.jar"/>
+        <classpathentry exported="true" kind="var" path="M2_REPO/com/github/rtyley/roboguice-sherlock/1.5/roboguice-sherlock-1.5.jar"/>
+        <classpathentry exported="true" kind="var" path="M2_REPO/com/google/inject/guice/3.0/guice-3.0-no_aop.jar"/>
+        <classpathentry exported="true" kind="var" path="M2_REPO/javax/inject/javax.inject/1/javax.inject-1.jar"/>
+        <classpathentry kind="var" path="M2_REPO/com/actionbarsherlock/actionbarsherlock/4.2.0/actionbarsherlock-4.2.0.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
