@@ -6,23 +6,28 @@
 	<version>2.0.29-SNAPSHOT</version>
 	<name>${project.artifactId}</name>
 	<packaging>pom</packaging>
+
+	<prerequisites>
+	    <maven>3.1.1</maven>
+	</prerequisites>
+
 	<properties>
 		<!-- The following should be overridden to sign an application for release builds. -->
 		<android.sign.keypass />
 		<android.sign.keystore />
 		<android.sign.alias />
 		<android.sign.storepass />
-		<android.android.version>4.3_r1</android.android.version>
+		<android.android.version>4.4_r1</android.android.version>
 		<android.api.level>18</android.api.level>
-		<android.maven.plugin.version>3.6.0</android.maven.plugin.version>
-		<android.support.version>18</android.support.version>
+		<android.maven.plugin.version>3.8.2</android.maven.plugin.version>
+		<android.support.version>19</android.support.version>
 
 		<!-- Override this if your monkeytalk script directory isn't ${artifactId}-monkeytalk -->
 		<metova.maven.monkeytalk.scriptdirectory />
-		<actionbarsherlock.version>4.2.0</actionbarsherlock.version>
+		<actionbarsherlock.version>4.4.0</actionbarsherlock.version>
 		
 		<!-- Metova-specific deployment properties. -->
-		<metova.maven.app7.version>1.0.35.2</metova.maven.app7.version>
+		<metova.maven.app7.version>1.0.36</metova.maven.app7.version>
 		<metova.maven.monkeytalk.version>1.0.1-SNAPSHOT</metova.maven.monkeytalk.version>
 	</properties>
 	<scm>
