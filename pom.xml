@@ -20,7 +20,7 @@
 
 		<android.android.version>4.4_r1</android.android.version>
 		<android.api.level>19</android.api.level>
-		<android.maven.plugin.version>3.8.2</android.maven.plugin.version>
+		<android.maven.plugin.version>3.8.1</android.maven.plugin.version>
 		<android.support.version>19</android.support.version>
 
 		<!-- Override this if your monkeytalk script directory isn't ${artifactId}-monkeytalk -->
